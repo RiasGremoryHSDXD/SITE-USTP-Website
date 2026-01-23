@@ -2,9 +2,10 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-site-blue: #1e4a8f;
-  --color-site-navy: #132E54;
-  --color-site-cyan: #00a3e0;
+  --color-site-blue: #4169E1;
+  /* Royal Blue */
+  --color-site-cyan: #00FFFF;
+  /* Cyan */
 
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
@@ -22,10 +23,6 @@
     @apply font-body text-gray-800 bg-white;
   }
 
-  .dark body {
-    @apply bg-[#0f172a] text-gray-100;
-  }
-
   h1,
   h2,
   h3,
@@ -33,14 +30,5 @@
   h5,
   h6 {
     @apply font-heading font-bold text-gray-900;
-  }
-
-  .dark h1,
-  .dark h2,
-  .dark h3,
-  .dark h4,
-  .dark h5,
-  .dark h6 {
-    @apply text-white;
   }
 }
