@@ -32,12 +32,27 @@ try {
                 <div class="mt-4 inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-2">
                     <span class="text-blue-700 font-semibold">Academic Year {academicYear}</span>
                 </div>
+
+                <!-- Search Input -->
+                <div class="mt-8 max-w-md mx-auto relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                         <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                          </svg>
+                    </div>
+                    <input
+                        type="text"
+                        id="searchOfficerPublic"
+                        placeholder="Search for an officer..."
+                        class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-full leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm shadow-sm"
+                    />
+                </div>
             </div>
 
             <!-- Departments -->
-            <div class="space-y-16">
+            <div class="space-y-16" id="departmentsContainer">
                 {departments.map((department) => (
-                    <section>
+                    <section class="dept-section">
                         <!-- Department Header -->
                         <div class="flex items-center gap-3 mb-8">
                             <span class="text-3xl">{department.emoji}</span>
@@ -50,7 +65,11 @@ try {
                         <!-- Officers Grid -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {department.members.map((member) => (
-                                <div class="group bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-blue-300 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300">
+                                <div 
+                                    class="officer-card group bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-blue-300 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300"
+                                    data-name={member.name}
+                                    data-position={member.position}
+                                >
                                     <!-- Image Display -->
                                     <div class="h-48 w-full bg-slate-100 relative overflow-hidden">
                                         {officerProfilePictures[member.name] ? (
@@ -88,3 +107,37 @@ try {
         </div>
     </div>
 </MainLayout>
+
+<script>
+    const searchInput = document.getElementById("searchOfficerPublic");
+    
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+            const searchTerm = (e.target as HTMLInputElement).value.toLowerCase().trim();
+            const officerCards = document.querySelectorAll(".officer-card");
+            const deptSections = document.querySelectorAll(".dept-section");
+
+            // Filter individual cards
+            officerCards.forEach((card) => {
+                const name = card.getAttribute("data-name")?.toLowerCase() || "";
+                const position = card.getAttribute("data-position")?.toLowerCase() || "";
+                
+                if (name.includes(searchTerm) || position.includes(searchTerm)) {
+                    card.classList.remove("hidden");
+                } else {
+                    card.classList.add("hidden");
+                }
+            });
+
+            // Hide empty sections
+            deptSections.forEach((section) => {
+                const visibleCards = section.querySelectorAll(".officer-card:not(.hidden)");
+                if (visibleCards.length === 0) {
+                    section.classList.add("hidden");
+                } else {
+                    section.classList.remove("hidden");
+                }
+            });
+        });
+    }
+</script>

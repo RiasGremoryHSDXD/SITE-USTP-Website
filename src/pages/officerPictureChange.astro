@@ -34,7 +34,16 @@ import officersData from "../data/officers.json";
                             Officers ({officersData.academicYear})
                         </h3>
                     </div>
-                    <div class="overflow-y-auto flex-1 p-2 space-y-4">
+                    <!-- Search Input -->
+                    <div class="px-4 py-2 bg-gray-50 border-b border-gray-200">
+                        <input
+                            type="text"
+                            id="searchOfficerInput"
+                            placeholder="Search officer name..."
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                    </div>
+                    <div class="overflow-y-auto flex-1 p-2 space-y-4" id="officersListContainer">
                         {
                             officersData.departments.map((dept) => (
                                 <div class="mb-6">
@@ -242,6 +251,41 @@ import officersData from "../data/officers.json";
             localStorage.removeItem("isAdmin");
             localStorage.removeItem("adminEmail");
             window.location.href = "/admin";
+        });
+    }
+
+    // 2.5 Search Logic
+    const searchInput = document.getElementById("searchOfficerInput");
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+            const searchTerm = (e.target as HTMLInputElement).value
+                .toLowerCase()
+                .trim();
+            const officerItems = document.querySelectorAll(".officer-item");
+
+            officerItems.forEach((item) => {
+                const name = item.getAttribute("data-name")?.toLowerCase() || "";
+                
+                // Show/Hide Items
+                if (name.includes(searchTerm)) {
+                    item.classList.remove("hidden");
+                    item.classList.add("flex"); // Ensure flex display when visible
+                } else {
+                    item.classList.add("hidden");
+                    item.classList.remove("flex");
+                }
+            });
+
+            // Optional: Hide empty departments
+            const departments = document.querySelectorAll("#officersListContainer > div");
+            departments.forEach(dept => {
+                const visibleItems = dept.querySelectorAll(".officer-item:not(.hidden)");
+                if (visibleItems.length === 0) {
+                     dept.classList.add("hidden");
+                } else {
+                     dept.classList.remove("hidden");
+                }
+            });
         });
     }
 
